@@ -32,3 +32,9 @@ Ce projet met ainsi en valeur :
 - la gestion et la conversion de structures de données dynamiques,
 
 - l’intégration d’algorithmes dans un logiciel complet et réutilisable.
+Participants :
+
+CHIBANI Rayane Développeur
+XAYPHRARATH Sylvain Développeur - Chef de projet
+SANNA Lorris Développeur
+Encadrant : M. ELBAZ M.
