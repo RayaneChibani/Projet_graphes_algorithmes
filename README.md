@@ -35,6 +35,9 @@ Ce projet met ainsi en valeur :
 Participants :
 
 CHIBANI Rayane Développeur
+
 XAYPHRARATH Sylvain Développeur - Chef de projet
+
 SANNA Lorris Développeur
+
 Encadrant : M. ELBAZ M.
