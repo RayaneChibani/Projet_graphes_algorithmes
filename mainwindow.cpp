@@ -409,7 +409,8 @@ void MainWindow::on_btnTerminerSommet_clicked()
                 ui->comboBoxSommet1->addItem(item);
                 ui->comboBoxSommet2->addItem(item);
             }
-            graphe->det_degres();
+            //graphe->det_degres();
+            //graphe->
             pageSaisieLiensWidget();
             ui->editTxtNomSommet->clear();
         }
@@ -1303,15 +1304,25 @@ void MainWindow::on_btnExecAlgo_clicked()
 
         grapheCourant->det_fs_aps_couts(fs, aps, couts);
 
-        a.rang(fs, aps, rang, prem, pilch);
+        if (a.rang(fs, aps, rang, prem, pilch))
+        {
+            afficher_tableau("aps", aps);
+            afficher_tableau("fs", fs);
+            afficher_tableau("prem", prem);
+            afficher_tableau("pilch", pilch);
+            afficher_tableau("rang", rang);
 
-        QString result;
+            QString result;
 
-        afficherTableauDansLabel("prem", prem, result);
-        afficherTableauDansLabel("pilch", pilch, result);
-        afficherTableauDansLabel("rang", rang, result);
+            afficherTableauDansLabel("prem", prem, result);
+            afficherTableauDansLabel("pilch", pilch, result);
+            afficherTableauDansLabel("rang", rang, result);
 
-        ui->labelResultatsAlgo->setText(result);
+            ui->labelResultatsAlgo->setText(result);
+        } else
+        {
+            ui->labelResultatsAlgo->setText("Le graphe ne contient aucun sommet ayant un ddi nul.");
+        }
     }
 
     //-----------------------------------------------TARJAN
@@ -1776,7 +1787,8 @@ void MainWindow::on_btnExecAlgo_clicked()
         vector<vector<int>> matADJ;
         vector<sommet> sommets;
 
-        grapheNonOriente* T = new grapheNonOriente(matADJ, sommets);
+        grapheNonOriente* gno = dynamic_cast<grapheNonOriente*>(grapheCourant);
+        grapheNonOriente* T = copierSansAretes(gno);
 
         std::unordered_set<int> sommetsAjoutes;
         std::vector<lien> aretesAajouter;
@@ -1793,43 +1805,14 @@ void MainWindow::on_btnExecAlgo_clicked()
                     + QString::fromStdString(sommetArrivee.nom) + ") (valeur = "
                     + QString::number(valeur) + ") à l'arbre T.\n";
 
-            // Ajouter les sommets au graphe T
-            if (sommetsAjoutes.find(sommetDepart.id) == sommetsAjoutes.end()) {
-                T->ajouterSommet(sommetDepart);
-                // Après l'ajout, réassigner l'ID avec la méthode setIdDuSommet
-                int index = T->getSommets().size() - 1; // Dernier sommet ajouté
-                T->setIdDuSommet(index, sommetDepart.id); // Assigner l'ID correct
-                qDebug() << "DEPART : " << sommetDepart.nom << sommetDepart.id;
-                sommetsAjoutes.insert(sommetDepart.id);
-            }
-
-            if (sommetsAjoutes.find(sommetArrivee.id) == sommetsAjoutes.end()) {
-                T->ajouterSommet(sommetArrivee);
-                // Après l'ajout, réassigner l'ID avec la méthode setIdDuSommet
-                int index = T->getSommets().size() - 1; // Dernier sommet ajouté
-                T->setIdDuSommet(index, sommetArrivee.id); // Assigner l'ID correct
-                qDebug() << "ARRIVEE : " << sommetArrivee.nom << sommetArrivee.id;
-                sommetsAjoutes.insert(sommetArrivee.id);
-            }
-
-            // Stocker l'arête pour l'ajouter plus tard
             lien l = {sommetDepart, sommetArrivee, valeur};
             aretesAajouter.push_back(l);
         }
 
-        // Maintenant, réassigner les IDs des sommets ajoutés dans le graphe T
-        for (int i = 0; i < T->getSommets().size(); ++i) {
-            // Réassigner l'ID basé sur la position dans le vecteur
-            T->getSommets()[i].id = i + 1;  // Réattribuer les IDs correctement
-            qDebug() << "Sommet " << T->getSommets()[i].nom << " ID " << T->getSommets()[i].id;
-        }
-
         // Affichage
-        T->det_degres();
         T->afficherMatriceAdjacence();
         T->afficherSommets();
 
-        // Ajouter toutes les arêtes après avoir ajouté les sommets
         for (const auto& lienAajouter : aretesAajouter) {
             T->ajouterLien(lienAajouter);
         }
@@ -1857,12 +1840,27 @@ void MainWindow::on_btnExecAlgo_clicked()
     }
 }
 
+grapheNonOriente* MainWindow::copierSansAretes(const grapheNonOriente* original) {
+    vector<vector<int>> matVide(original->getSommets().size(), vector<int>(original->getSommets().size(), INT_MAX));
+    vector<sommet> nouveauxSommets;
+
+    for (const auto& s : original->getSommets()) {
+        nouveauxSommets.push_back(s);
+    }
+
+    grapheNonOriente* copie = new grapheNonOriente(matVide, nouveauxSommets);
+
+    return copie;
+}
+
 void MainWindow::on_btnRetourVisuAlgo_clicked()
 {
     affichagegraphe = nullptr;
     ui->labelResultatsAlgo->clear();
+    ui->labelCFC->clear();
     ui->graphicsViewVisuAlgo->setScene(nullptr);
     ui->btnTaches->setVisible(false);
+    ui->btnVoirGrapheReduit->setVisible(false);
     nomsTaches.clear();
     pageAlgos();
 }

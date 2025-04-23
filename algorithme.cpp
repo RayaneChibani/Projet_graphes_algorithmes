@@ -71,26 +71,30 @@ vector<vector<int>> algorithme::distances(vector<int> aps, vector<int> fs) const
 }
 
 //--------------------------------------------------------------------------------RANG
-void algorithme::rang(vector<int> fs, vector<int> aps, vector<int> &rang, vector<int> &prem, vector<int> &pilch)
-{
-    int n = aps[0], taillefs = fs[0], s, k, h, t;
-    rang.resize(n + 1, -1);  // Initialisation à -1
+bool algorithme::rang(vector<int> fs, vector<int> aps, vector<int> &rang, vector<int> &prem, vector<int> &pilch) { //Renvoi false si le graphe ne contient aucun sommet ayant un ddi nul au départ.
+    int n = aps[0], s, k, h, t;
+    rang.resize(n + 1, -1);
     prem.resize(n + 1, 0);
     pilch.resize(n + 1, 0);
     vector<int> ddi(n + 1, 0);
 
-    // Calcul de ddi
-    for (int i = 1; i <= taillefs; i++) {
-        s = fs[i];
-        if (s > 0) ddi[s]++;
+    for (int i = 1; i <= n; i++) {
+        for (int j = aps[i]; fs[j] != 0; j++) {
+            ddi[fs[j]]++;
+        }
     }
 
-    // Initialisation du rang et empilage des sommets de ddi nul
     pilch[0] = 0;
     for (s = 1; s <= n; s++) {
         if (ddi[s] == 0) empiler(s, pilch);
     }
 
+    //Si aucun sommet de départ, on retourne false (aucun sommet n'a un ddi nul)
+    if (pilch[0] == 0) {
+        return false;
+    }
+
+    //Calcul des rangs
     k = -1;
     s = pilch[0];
     prem[0] = s;
@@ -115,6 +119,8 @@ void algorithme::rang(vector<int> fs, vector<int> aps, vector<int> &rang, vector
     }
 
     rang[0] = aps[0];
+
+    return true;
 }
 
 //--------------------------------------------------------------------------------TARJAN

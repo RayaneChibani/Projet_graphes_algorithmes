@@ -14,7 +14,7 @@ class algorithme
 public:
     algorithme();
     vector<vector<int>> distances(vector<int> aps, vector<int> fs) const;
-    void rang(vector<int> fs, vector<int> aps, vector<int> &rang, vector<int> &prem, vector<int> &pilch);
+    bool rang(vector<int> fs, vector<int> aps, vector<int> &rang, vector<int> &prem, vector<int> &pilch);
     void fortconnexe(vector<int>& aps, vector<int>& fs, vector<int>& prem, vector<int>& pilch,
                                  vector<int>& cfc, vector<int>& pred);
     void grapheReduit(vector<int> prem, vector<int> pilch, vector<int> cfc, vector<int> fs, vector<int> aps, vector<int>& fsr, vector<int>& apsr);

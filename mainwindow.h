@@ -128,6 +128,7 @@ private:
     bool grapheCourantOriente = false;
     int compteurID = 1;  // ID unique pour chaque sommet
     bool grapheCourantEstValue();
+    grapheNonOriente* copierSansAretes(const grapheNonOriente* original);
     QVector<QString> nomsTaches;  // Tableau pour stocker les noms des tâches pour ordonnancement
     int algoAExecuter = -1;
     void transformerCouts(const std::vector<int>& couts, std::vector<int>& d);

@@ -6,6 +6,8 @@ grapheNonOriente::grapheNonOriente(std::vector<std::vector<int>> matADJ, std::ve
     mettreAjourLesIdDesSommets();
 }
 
+grapheNonOriente::grapheNonOriente(vector<int> fs, vector<int> aps, vector<sommet> sommets) : grapheNonOriente(fs, aps, vector<int>(fs[0] + 1, 1), sommets) {}
+
 grapheNonOriente::grapheNonOriente(std::vector<int> fs, std::vector<int> aps, std::vector<int> couts, std::vector<sommet> sommets) : graphe(fs, aps, couts, sommets)
 {
     det_degres();
@@ -15,13 +17,31 @@ grapheNonOriente::grapheNonOriente(std::vector<int> fs, std::vector<int> aps, st
 grapheNonOriente::grapheNonOriente (std::string nomDuFichier): graphe(nomDuFichier)
 {
     det_degres();
-    //mettreAjourLesIdDesSommets();
+    mettreAjourLesIdDesSommets();
 }
 
 grapheNonOriente::grapheNonOriente(liste_Principale_Secondaire* listePrincipaleSecondaire, std::vector<sommet> sommets): graphe(listePrincipaleSecondaire,sommets)
 {
     det_degres();
     mettreAjourLesIdDesSommets();
+}
+
+void grapheNonOriente::ajouterSommet(const sommet& s)
+{
+    degres.push_back(0);
+
+    this->n++; // Incrémente le nombre de sommets
+    sommets.push_back(s); // Ajoute le sommet au vecteur
+
+    // Ajuster la taille de la matrice d'adjacence sans perdre les données existantes
+    for (auto &ligne : matADJ)
+    {
+        ligne.resize(getNbSommets(), PAS_DE_LIEN); // Ajouter une colonne
+    }
+    matADJ.push_back(std::vector<int>(getNbSommets(), PAS_DE_LIEN)); // Ajouter une nouvelle ligne
+
+    // Mettre à jour l'ID du sommet ajouté
+    sommets.back().id = getNbSommets();
 }
 
 void grapheNonOriente::ajouterLien(lien l)
@@ -34,10 +54,6 @@ void grapheNonOriente::ajouterLien(lien l)
 
         degres[l.a.id - 1]++;
         degres[l.b.id - 1]++;
-
-        qDebug() << "Arête ajoutée entre les sommets" << l.a.nom << "et" << l.b.nom << "poids" << l.poids;
-    } else {
-        qDebug() << "Arête déjà existante entre les sommets" << l.a.nom << "et" << l.b.nom;
     }
 }
 

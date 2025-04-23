@@ -2,25 +2,47 @@
 
 grapheOriente::grapheOriente(std::vector<std::vector<int>> matADJ, std::vector<sommet> sommets) : graphe(matADJ, sommets)
 {
-    //det_dde_ddi();
-    //mettreAjourLesIdDesSommets();
+    det_dde_ddi();
+    mettreAjourLesIdDesSommets();
 }
+
+grapheOriente::grapheOriente(vector<int> fs, vector<int> aps, vector<sommet> sommets) : grapheOriente(fs, aps, vector<int>(fs[0] + 1, 1), sommets) {}
 
 grapheOriente::grapheOriente(std::vector<int> fs, std::vector<int> aps, std::vector<int> couts, std::vector<sommet> sommets) : graphe(fs, aps, couts, sommets)
 {
-    det_degres();
+    det_dde_ddi();
     mettreAjourLesIdDesSommets();
 }
 
 grapheOriente::grapheOriente (std::string nomDuFichier): graphe(nomDuFichier)
 {
-    det_degres();
+    det_dde_ddi();
+    mettreAjourLesIdDesSommets();
 }
 
 grapheOriente::grapheOriente(liste_Principale_Secondaire* listePrincipaleSecondaire, std::vector<sommet> sommets): graphe(listePrincipaleSecondaire,sommets)
 {
-    det_degres();
+    det_dde_ddi();
     mettreAjourLesIdDesSommets();
+}
+
+void grapheOriente::ajouterSommet(const sommet& s)
+{
+    ddi.push_back(0);
+    dde.push_back(0);
+
+    this->n++; // Incrémente le nombre de sommets
+    sommets.push_back(s); // Ajoute le sommet au vecteur
+
+    // Ajuster la taille de la matrice d'adjacence sans perdre les données existantes
+    for (auto &ligne : matADJ)
+    {
+        ligne.resize(getNbSommets(), PAS_DE_LIEN); // Ajouter une colonne
+    }
+    matADJ.push_back(std::vector<int>(getNbSommets(), PAS_DE_LIEN)); // Ajouter une nouvelle ligne
+
+    // Mettre à jour l'ID du sommet ajouté
+    sommets.back().id = getNbSommets();
 }
 
 void grapheOriente::ajouterLien(lien l)
@@ -65,7 +87,7 @@ int grapheOriente::detDdiDuSommet(int id) const
     return ddi[id-1];
 }
 
-void grapheOriente::det_degres()
+void grapheOriente::det_dde_ddi()
 {
     int n = getNbSommets();
 
