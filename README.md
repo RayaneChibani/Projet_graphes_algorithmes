@@ -34,7 +34,7 @@ Ce projet met ainsi en valeur :
 - l’intégration d’algorithmes dans un logiciel complet et réutilisable.
 Participants :
 
-Build de l'application : https://filesender.renater.fr/?s=download&token=0daa3603-6e1d-4820-81b0-f880ebeb5eca ](https://filesender.renater.fr/?s=download&token=a555b348-177f-4299-9018-22e19a17c7d7
+Build de l'application : https://filesender.renater.fr/?s=download&token=a555b348-177f-4299-9018-22e19a17c7d7
 
 CHIBANI Rayane Développeur
 
